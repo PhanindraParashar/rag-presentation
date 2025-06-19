@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic Search & RAG for GenAI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Navigation Controls -->
+        <div class="nav-controls">
+            <button class="nav-btn" id="prevBtn">←</button>
+            <span class="slide-counter">
+                <span id="currentSlide">1</span> / <span id="totalSlides">15</span>
+            </span>
+            <button class="nav-btn" id="nextBtn">→</button>
+        </div>
+
+        <!-- Timer Display -->
+        <div class="timer-display">
+            <span id="timer">00:00</span>
+        </div>
+
+        <!-- Slides Container -->
+        <div class="slides-container">
+            
+            <!-- Slide 1: Agenda -->
+            <div class="slide active" data-slide="1">
+                <div class="slide-content">
+                    <h1>🧠 Semantic Search and Retrieval-Augmented Generation (RAG)</h1>
+                    <h2>What Will You Learn Today?</h2>
+                    <div class="bullet-points">
+                        <div class="bullet-item" data-delay="0">
+                            <span class="bullet">•</span>
+                            <span>Why traditional LLMs fail in answering private/internal questions</span>
+                        </div>
+                        <div class="bullet-item" data-delay="300">
+                            <span class="bullet">•</span>
+                            <span>The intuition behind RAG</span>
+                        </div>
+                        <div class="bullet-item" data-delay="600">
+                            <span class="bullet">•</span>
+                            <span>What embeddings are and how semantic search works</span>
+                        </div>
+                        <div class="bullet-item" data-delay="900">
+                            <span class="bullet">•</span>
+                            <span>Chunking, Vector Databases, and Efficient Retrieval</span>
+                        </div>
+                        <div class="bullet-item" data-delay="1200">
+                            <span class="bullet">•</span>
+                            <span>Advanced concepts: HyDE, Re-ranking</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2: The Problem -->
+            <div class="slide" data-slide="2">
+                <div class="slide-content">
+                    <h1>The Problem — Why LLMs Fail Without Context</h1>
+                    <div class="problem-demo">
+                        <div class="chat-container">
+                            <div class="chat-message user-message">
+                                <div class="message-bubble">
+                                    <div class="typing-text">"What's our company's sabbatical leave policy?"</div>
+                                </div>
+                            </div>
+                            <div class="chat-message ai-message">
+                                <div class="message-bubble ai-bubble">
+                                    <div class="typing-text" data-delay="2000">Sorry, I don't have that information.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="problem-explanation">
+                            <h3>Why this happens:</h3>
+                            <div class="bullet-points">
+                                <div class="bullet-item" data-delay="3000">
+                                    <span class="bullet">•</span>
+                                    <span>LLMs don't have access to internal company documents</span>
+                                </div>
+                                <div class="bullet-item" data-delay="3300">
+                                    <span class="bullet">•</span>
+                                    <span>They only know what they were trained on (public data)</span>
+                                </div>
+                                <div class="bullet-item" data-delay="3600">
+                                    <span class="bullet">•</span>
+                                    <span>Your private data is locked away</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Naive Solution -->
+            <div class="slide" data-slide="3">
+                <div class="slide-content">
+                    <h1>The Naive Solution — Just Add All the Documents</h1>
+                    <div class="naive-solution">
+                        <div class="giant-pdf-container">
+                            <div class="pdf-stack">
+                                <div class="pdf-page" data-delay="0">📄</div>
+                                <div class="pdf-page" data-delay="100">📄</div>
+                                <div class="pdf-page" data-delay="200">📄</div>
+                                <div class="pdf-page" data-delay="300">📄</div>
+                                <div class="pdf-page" data-delay="400">📄</div>
+                            </div>
+                            <div class="loading-text">Loading 1000 pages...</div>
+                        </div>
+                        <div class="problems-list">
+                            <h3>Problems with this approach:</h3>
+                            <div class="bullet-points">
+                                <div class="bullet-item" data-delay="2000">
+                                    <span class="bullet">•</span>
+                                    <span><strong>Context length limit</strong> (~1M tokens = ~1000 pages)</span>
+                                </div>
+                                <div class="bullet-item" data-delay="2300">
+                                    <span class="bullet">•</span>
+                                    <span><strong>Cost and latency increase</strong> exponentially</span>
+                                </div>
+                                <div class="bullet-item" data-delay="2600">
+                                    <span class="bullet">•</span>
+                                    <span><strong>Inefficient:</strong> asking "What's the title?" doesn't need 1000 pages</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Magic Black Box -->
+            <div class="slide" data-slide="4">
+                <div class="slide-content">
+                    <h1>Thought Experiment — The Magic Black Box</h1>
+                    <div class="magic-box-demo">
+                        <div class="input-arrow">
+                            <div class="question-bubble">❓ Question</div>
+                            <div class="arrow animated-arrow" data-delay="1000">→</div>
+                        </div>
+                        <div class="black-box">
+                            <div class="box-content">
+                                <div class="magic-sparkles">✨</div>
+                                <div class="box-text">Magic Black Box</div>
+                            </div>
+                        </div>
+                        <div class="output-arrow">
+                            <div class="arrow animated-arrow" data-delay="2000">→</div>
+                            <div class="output-pages">
+                                <div class="page-result" data-delay="2500">📄</div>
+                                <div class="page-result" data-delay="2700">📄</div>
+                                <div class="page-result" data-delay="2900">📄</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="concept-explanation">
+                        <h3>Hypothetical black box:</h3>
+                        <div class="bullet-points">
+                            <div class="bullet-item" data-delay="3500">
+                                <span class="bullet">•</span>
+                                <span>You give it a question</span>
+                            </div>
+                            <div class="bullet-item" data-delay="3800">
+                                <span class="bullet">•</span>
+                                <span>It magically retrieves the <strong>3–5 most relevant pages</strong></span>
+                            </div>
+                            <div class="bullet-item" data-delay="4100">
+                                <span class="bullet">•</span>
+                                <span>This sets up the need for <em>intelligent retrieval</em></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: Semantic Search -->
+            <div class="slide" data-slide="5">
+                <div class="slide-content">
+                    <h1>So How Can This Be Done? – The Case for Semantic Search</h1>
+                    <div class="semantic-explanation">
+                        <div class="sentence-transform">
+                            <div class="sentence-example">
+                                <div class="sentence-text">"The dog barked loudly"</div>
+                                <div class="transform-arrow" data-delay="1000">↓</div>
+                                <div class="vector-representation" data-delay="1500">[0.3, 0.7, -0.2, 0.1, ...]</div>
+                            </div>
+                        </div>
+                        <div class="key-points">
+                            <h3>Key Concepts:</h3>
+                            <div class="bullet-points">
+                                <div class="bullet-item" data-delay="2000">
+                                    <span class="bullet">•</span>
+                                    <span><strong>A sentence → a vector</strong></span>
+                                </div>
+                                <div class="bullet-item" data-delay="2300">
+                                    <span class="bullet">•</span>
+                                    <span><strong>Captures meaning, not just words</strong></span>
+                                </div>
+                                <div class="bullet-item" data-delay="2600">
+                                    <span class="bullet">•</span>
+                                    <span>Sentence embeddings generated using <strong>encoder-only transformers</strong> like BERT</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 6: Embedding Space -->
+            <div class="slide" data-slide="6">
+                <div class="slide-content">
+                    <h1>Visualizing Embedding Space</h1>
+                    <div class="embedding-space">
+                        <div class="space-container">
+                            <div class="cluster animals-cluster" data-delay="500">
+                                <div class="cluster-title">Animals</div>
+                                <div class="cluster-items">
+                                    <div class="concept-dot" data-hover="dog">🐕 dog</div>
+                                    <div class="concept-dot" data-hover="cat">🐱 cat</div>
+                                    <div class="concept-dot" data-hover="bird">🐦 bird</div>
+                                </div>
+                            </div>
+                            <div class="cluster royalty-cluster" data-delay="1000">
+                                <div class="cluster-title">Royalty</div>
+                                <div class="cluster-items">
+                                    <div class="concept-dot" data-hover="king">👑 king</div>
+                                    <div class="concept-dot" data-hover="queen">👸 queen</div>
+                                    <div class="concept-dot" data-hover="crown">👑 crown</div>
+                                </div>
+                            </div>
+                            <div class="cluster science-cluster" data-delay="1500">
+                                <div class="cluster-title">Science</div>
+                                <div class="cluster-items">
+                                    <div class="concept-dot" data-hover="experiment">🧪 experiment</div>
+                                    <div class="concept-dot" data-hover="research">🔬 research</div>
+                                    <div class="concept-dot" data-hover="data">📊 data</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="intuition-text" data-delay="2000">
+                            <h3>Intuition:</h3>
+                            <p>Questions about pets will lie near "cat" and "dog" clusters</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 7: This is Semantic Search -->
+            <div class="slide" data-slide="7">
+                <div class="slide-content">
+                    <h1>This Is Semantic Search!</h1>
+                    <div class="search-demo">
+                        <div class="query-vector">
+                            <div class="vector-dot query-dot">❓ Query Vector</div>
+                        </div>
+                        <div class="search-animation" data-delay="1000">
+                            <div class="search-radius"></div>
+                            <div class="connecting-lines">
+                                <div class="search-line line1" data-delay="1500"></div>
+                                <div class="search-line line2" data-delay="1700"></div>
+                                <div class="search-line line3" data-delay="1900"></div>
+                            </div>
+                        </div>
+                        <div class="document-vectors">
+                            <div class="doc-vector doc1" data-delay="2000">📄 Doc A</div>
+                            <div class="doc-vector doc2" data-delay="2200">📄 Doc B</div>
+                            <div class="doc-vector doc3" data-delay="2400">📄 Doc C</div>
+                        </div>
+                    </div>
+                    <div class="explanation">
+                        <h3>How it works:</h3>
+                        <div class="bullet-points">
+                            <div class="bullet-item" data-delay="3000">
+                                <span class="bullet">•</span>
+                                <span>When you embed a question, you find the document embeddings <strong>closest</strong> to it in space</span>
+                            </div>
+                            <div class="bullet-item" data-delay="3300">
+                                <span class="bullet">•</span>
+                                <span>This is how we implement that magical black box</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 8: Vector Database -->
+            <div class="slide" data-slide="8">
+                <div class="slide-content">
+                    <h1>Vector Database – Storing Embeddings Efficiently</h1>
+                    <div class="vector-db-demo">
+                        <div class="database-table">
+                            <div class="table-header">
+                                <div class="column-header">Chunk Text</div>
+                                <div class="column-header">Vector</div>
+                            </div>
+                            <div class="table-row" data-delay="500">
+                                <div class="chunk-text">Our vacation policy...</div>
+                                <div class="vector-data">[0.2, 0.8, 0.3, ...]</div>
+                            </div>
+                            <div class="table-row" data-delay="700">
+                                <div class="chunk-text">Health insurance covers...</div>
+                                <div class="vector-data">[0.1, 0.4, 0.9, ...]</div>
+                            </div>
+                            <div class="table-row" data-delay="900">
+                                <div class="chunk-text">Office hours are...</div>
+                                <div class="vector-data">[0.7, 0.2, 0.5, ...]</div>
+                            </div>
+                            <div class="query-drop" data-delay="2000">
+                                <div class="query-vector-drop">❓ Query Vector</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="process-steps">
+                        <h3>Process:</h3>
+                        <div class="bullet-points">
+                            <div class="bullet-item" data-delay="2500">
+                                <span class="bullet">•</span>
+                                <span>Store all document embeddings ahead of time</span>
+                            </div>
+                            <div class="bullet-item" data-delay="2800">
+                                <span class="bullet">•</span>
+                                <span>When a query comes in: <strong>Embed the query</strong></span>
+                            </div>
+                            <div class="bullet-item" data-delay="3100">
+                                <span class="bullet">•</span>
+                                <span>Use <strong>approximate nearest neighbors (ANN)</strong> to retrieve closest vectors</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 9: Chunking -->
+            <div class="slide" data-slide="9">
+                <div class="slide-content">
+                    <h1>Chunking – Breaking Down Documents Smartly</h1>
+                    <div class="chunking-demo">
+                        <div class="chunk-slider-container">
+                            <div class="slider-label">Chunk Size:</div>
+                            <input type="range" id="chunkSlider" min="1" max="3" value="2" step="1">
+                            <div class="slider-labels">
+                                <span>Small</span>
+                                <span>Medium</span>
+                                <span>Large</span>
+                            </div>
+                        </div>
+                        <div class="chunk-visualization">
+                            <div class="document">
+                                <div class="chunk small-chunk" data-size="1">Text</div>
+                                <div class="chunk small-chunk" data-size="1">Text</div>
+                                <div class="chunk small-chunk" data-size="1">Text</div>
+                                <div class="chunk medium-chunk" data-size="2">Text chunk</div>
+                                <div class="chunk medium-chunk" data-size="2">Text chunk</div>
+                                <div class="chunk large-chunk" data-size="3">Large text chunk with more context</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tradeoffs">
+                        <h3>Trade-offs:</h3>
+                        <div class="bullet-points">
+                            <div class="bullet-item" data-delay="1000">
+                                <span class="bullet">•</span>
+                                <span><strong>Large chunks</strong> → more context, but more noise</span>
+                            </div>
+                            <div class="bullet-item" data-delay="1300">
+                                <span class="bullet">•</span>
+                                <span><strong>Small chunks</strong> → precise, but might miss context</span>
+                            </div>
+                            <div class="bullet-item" data-delay="1600">
+                                <span class="bullet">•</span>
+                                <span>Embedding size limitations also necessitate chunking</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 10: Recap -->
+            <div class="slide" data-slide="10">
+                <div class="slide-content">
+                    <h1>Recap — How Semantic Search Works</h1>
+                    <div class="recap-flow">
+                        <div class="flow-step" data-delay="500">
+                            <div class="step-icon">🗄️</div>
+                            <div class="step-text">Document store with precomputed embeddings</div>
+                        </div>
+                        <div class="flow-arrow" data-delay="1000">↓</div>
+                        <div class="flow-step" data-delay="1500">
+                            <div class="step-icon">❓</div>
+                            <div class="step-text">Query converted to an embedding</div>
+                        </div>
+                        <div class="flow-arrow" data-delay="2000">↓</div>
+                        <div class="flow-step" data-delay="2500">
+                            <div class="step-icon">🔍</div>
+                            <div class="step-text">Similarity-based retrieval using vector distance (cosine similarity)</div>
+                        </div>
+                    </div>
+                    <div class="recap-summary" data-delay="3000">
+                        <h3>You now have:</h3>
+                        <div class="bullet-points">
+                            <div class="bullet-item" data-delay="3500">
+                                <span class="bullet">•</span>
+                                <span>A document store with precomputed embeddings</span>
+                            </div>
+                            <div class="bullet-item" data-delay="3800">
+                                <span class="bullet">•</span>
+                                <span>A query converted to an embedding</span>
+                            </div>
+                            <div class="bullet-item" data-delay="4100">
+                                <span class="bullet">•</span>
+                                <span>A similarity-based retrieval process using vector distance</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 11: HyDE -->
+            <div class="slide" data-slide="11">
+                <div class="slide-content">
+                    <h1>Introducing HyDE – Turning Hallucination Into a Superpower</h1>
+                    <div class="hyde-demo">
+                        <div class="hyde-step step1" data-delay="500">
+                            <div class="step-title">1. Generate Fake Answer</div>
+                            <div class="fake-answer">Our company's vacation policy allows 25 days...</div>
+                        </div>
+                        <div class="hyde-arrow" data-delay="1000">↓</div>
+                        <div class="hyde-step step2" data-delay="1500">
+                            <div class="step-title">2. Embed Hypothetical Answer</div>
+                            <div class="embedding-vector">[0.4, 0.7, 0.2, ...]</div>
+                        </div>
+                        <div class="hyde-arrow" data-delay="2000">↓</div>
+                        <div class="hyde-step step3" data-delay="2500">
+                            <div class="step-title">3. Retrieve Relevant Documents</div>
+                            <div class="retrieved-docs">📄 Actual Policy Documents</div>
+                        </div>
+                    </div>
+                    <div class="hyde-explanation">
+                        <h3>How HyDE works:</h3>
+                        <div class="bullet-points">
+                            <div class="bullet-item" data-delay="3000">
+                                <span class="bullet">•</span>
+                                <span>Let the LLM generate a <em>fake answer</em> first</span>
+                            </div>
+                            <div class="bullet-item" data-delay="3300">
+                                <span class="bullet">•</span>
+                                <span>Embed this hypothetical answer</span>
+                            </div>
+                            <div class="bullet-item" data-delay="3600">
+                                <span class="bullet">•</span>
+                                <span>Use it to retrieve more relevant documents</span>
+                            </div>
+                            <div class="bullet-item" data-delay="3900">
+                                <span class="bullet">•</span>
+                                <span><strong>Hallucinations still stick to the right topic area</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 12: Re-ranking -->
+            <div class="slide" data-slide="12">
+                <div class="slide-content">
+                    <h1>Re-ranking – Refining What We Retrieved</h1>
+                    <div class="reranking-demo">
+                        <div class="initial-retrieval">
+                            <div class="retrieval-title">Initial Retrieval: Top 50</div>
+                            <div class="document-stack">
+                                <div class="doc-layer" data-delay="500">📄 📄 📄 📄 📄</div>
+                                <div class="doc-layer" data-delay="600">📄 📄 📄 📄 📄</div>
+                                <div class="doc-layer" data-delay="700">📄 📄 📄 📄 📄</div>
+                                <div class="doc-layer" data-delay="800">📄 📄 📄 📄 📄</div>
+                                <div class="doc-layer" data-delay="900">📄 📄 📄 📄 📄</div>
+                            </div>
+                        </div>
+                        <div class="reranking-process" data-delay="1500">
+                            <div class="process-title">Re-ranking with Cross-Encoder</div>
+                            <div class="scanning-effect"></div>
+                        </div>
+                        <div class="final-selection" data-delay="2500">
+                            <div class="selection-title">Final Top 5</div>
+                            <div class="selected-docs">
+                                <div class="selected-doc" data-delay="3000">📄</div>
+                                <div class="selected-doc" data-delay="3200">📄</div>
+                                <div class="selected-doc" data-delay="3400">📄</div>
+                                <div class="selected-doc" data-delay="3600">📄</div>
+                                <div class="selected-doc" data-delay="3800">📄</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reranking-explanation">
+                        <h3>Re-ranking process:</h3>
+                        <div class="bullet-points">
+                            <div class="bullet-item" data-delay="4000">
+                                <span class="bullet">•</span>
+                                <span>Instead of retrieving top-5, retrieve top-50</span>
+                            </div>
+                            <div class="bullet-item" data-delay="4300">
+                                <span class="bullet">•</span>
+                                <span>Use another model (<strong>cross-encoder</strong>) to re-rank based on deeper semantic comparison</span>
+                            </div>
+                            <div class="bullet-item" data-delay="4600">
+                                <span class="bullet">•</span>
+                                <span>Select best top-k for generation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 13: RAG Workflow Summary -->
+            <div class="slide" data-slide="13">
+                <div class="slide-content">
+                    <h1>RAG Workflow Summary</h1>
+                    <div class="full-workflow">
+                        <div class="workflow-step step1" data-delay="500">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <div class="step-title">Chunk documents</div>
+                                <div class="step-icon">📄→🧩</div>
+                            </div>
+                        </div>
+                        <div class="workflow-step step2" data-delay="800">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <div class="step-title">Embed and store in vector DB</div>
+                                <div class="step-icon">🧩→📊</div>
+                            </div>
+                        </div>
+                        <div class="workflow-step step3" data-delay="1100">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <div class="step-title">Embed query</div>
+                                <div class="step-icon">❓→📊</div>
+                            </div>
+                        </div>
+                        <div class="workflow-step step4" data-delay="1400">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <div class="step-title">Retrieve using ANN</div>
+                                <div class="step-icon">🔍</div>
+                            </div>
+                        </div>
+                        <div class="workflow-step step5" data-delay="1700">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <div class="step-title">Optionally re-rank</div>
+                                <div class="step-icon">📊→📈</div>
+                            </div>
+                        </div>
+                        <div class="workflow-step step6" data-delay="2000">
+                            <div class="step-number">6</div>
+                            <div class="step-content">
+                                <div class="step-title">Add top chunks as context</div>
+                                <div class="step-icon">📄+❓</div>
+                            </div>
+                        </div>
+                        <div class="workflow-step step7" data-delay="2300">
+                            <div class="step-number">7</div>
+                            <div class="step-content">
+                                <div class="step-title">Ask LLM → Get final answer</div>
+                                <div class="step-icon">🤖→💬</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 14: Benefits -->
+            <div class="slide" data-slide="14">
+                <div class="slide-content">
+                    <h1>Benefits of RAG</h1>
+                    <div class="benefits-cards">
+                        <div class="benefit-card" data-delay="500">
+                            <div class="card-front">
+                                <div class="benefit-icon">✅</div>
+                                <div class="benefit-title">Reduces Hallucination</div>
+                            </div>
+                            <div class="card-back">
+                                <div class="benefit-detail">Answers are grounded in your actual documents, not AI imagination</div>
+                            </div>
+                        </div>
+                        <div class="benefit-card" data-delay="800">
+                            <div class="card-front">
+                                <div class="benefit-icon">🔍</div>
+                                <div class="benefit-title">Adds References</div>
+                            </div>
+                            <div class="card-back">
+                                <div class="benefit-detail">You can verify where answers came from and fact-check them</div>
+                            </div>
+                        </div>
+                        <div class="benefit-card" data-delay="1100">
+                            <div class="card-front">
+                                <div class="benefit-icon">📈</div>
+                                <div class="benefit-title">Scales with Data</div>
+                            </div>
+                            <div class="card-back">
+                                <div class="benefit-detail">Works with growing databases - just add new documents</div>
+                            </div>
+                        </div>
+                        <div class="benefit-card" data-delay="1400">
+                            <div class="card-front">
+                                <div class="benefit-icon">💰</div>
+                                <div class="benefit-title">Avoids Fine-tuning</div>
+                            </div>
+                            <div class="card-back">
+                                <div class="benefit-detail">No expensive model retraining required</div>
+                            </div>
+                        </div>
+                        <div class="benefit-card" data-delay="1700">
+                            <div class="card-front">
+                                <div class="benefit-icon">🔐</div>
+                                <div class="benefit-title">Preserves Privacy</div>
+                            </div>
+                            <div class="card-back">
+                                <div class="benefit-detail">Your sensitive data stays in your control</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 15: Wrap-up -->
+            <div class="slide" data-slide="15">
+                <div class="slide-content">
+                    <h1>Wrap-Up & Final Thoughts</h1>
+                    <div class="final-thoughts">
+                        <div class="key-message" data-delay="500">
+                            <h2>🎯 Key Takeaways</h2>
+                            <div class="bullet-points">
+                                <div class="bullet-item" data-delay="1000">
+                                    <span class="bullet">•</span>
+                                    <span><strong>Why traditional LLMs need RAG</strong> for private/custom knowledge</span>
+                                </div>
+                                <div class="bullet-item" data-delay="1300">
+                                    <span class="bullet">•</span>
+                                    <span><strong>Embeddings power semantic search</strong> by capturing meaning</span>
+                                </div>
+                                <div class="bullet-item" data-delay="1600">
+                                    <span class="bullet">•</span>
+                                    <span><strong>Vector DB + Chunking + Re-ranking</strong> make it scalable</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="closing-animation" data-delay="2000">
+                            <div class="rag-summary">
+                                <div class="rag-word retrieve">RETRIEVE</div>
+                                <div class="rag-arrow">→</div>
+                                <div class="rag-word augment">AUGMENT</div>
+                                <div class="rag-arrow">→</div>
+                                <div class="rag-word generate">GENERATE</div>
+                            </div>
+                        </div>
+                        <div class="questions-section" data-delay="3000">
+                            <h3>Questions?</h3>
+                            <p>Let's discuss how RAG can solve your AI challenges</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
