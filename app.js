@@ -316,10 +316,13 @@ class PresentationController {
         const slider = document.getElementById('chunkSlider');
         if (!slider) return;
 
+        const display = document.querySelector('.chunk-size-display');
+        const labels = { '1': 'Small', '2': 'Medium', '3': 'Large' };
+
         slider.addEventListener('input', (e) => {
             const value = e.target.value;
             const chunks = document.querySelectorAll('.chunk');
-            
+
             chunks.forEach(chunk => {
                 chunk.style.display = 'none';
             });
@@ -328,6 +331,10 @@ class PresentationController {
             targetChunks.forEach(chunk => {
                 chunk.style.display = 'inline-block';
             });
+
+            if (display) {
+                display.textContent = `${labels[value]} chunks`;
+            }
         });
 
         // Initialize with medium chunks
