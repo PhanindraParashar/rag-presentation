@@ -209,37 +209,21 @@
             <!-- Slide 6: Embedding Space -->
             <div class="slide" data-slide="6">
                 <div class="slide-content">
-                    <h1>Visualizing Embedding Space</h1>
+                    <h1>Embedding Space in 3D</h1>
                     <div class="embedding-space">
-                        <div class="space-container">
-                            <div class="cluster animals-cluster" data-delay="500">
-                                <div class="cluster-title">Animals</div>
-                                <div class="cluster-items">
-                                    <div class="concept-dot" data-hover="dog">🐕 dog</div>
-                                    <div class="concept-dot" data-hover="cat">🐱 cat</div>
-                                    <div class="concept-dot" data-hover="bird">🐦 bird</div>
-                                </div>
-                            </div>
-                            <div class="cluster royalty-cluster" data-delay="1000">
-                                <div class="cluster-title">Royalty</div>
-                                <div class="cluster-items">
-                                    <div class="concept-dot" data-hover="king">👑 king</div>
-                                    <div class="concept-dot" data-hover="queen">👸 queen</div>
-                                    <div class="concept-dot" data-hover="crown">👑 crown</div>
-                                </div>
-                            </div>
-                            <div class="cluster science-cluster" data-delay="1500">
-                                <div class="cluster-title">Science</div>
-                                <div class="cluster-items">
-                                    <div class="concept-dot" data-hover="experiment">🧪 experiment</div>
-                                    <div class="concept-dot" data-hover="research">🔬 research</div>
-                                    <div class="concept-dot" data-hover="data">📊 data</div>
-                                </div>
-                            </div>
+                        <div class="vector-3d">
+                            <div class="axis x-axis"></div>
+                            <div class="axis y-axis"></div>
+                            <div class="axis z-axis"></div>
+                            <div class="sentence-point" style="--x:40; --y:30; --z:-20;" data-delay="500">"Cats purr"</div>
+                            <div class="sentence-point" style="--x:60; --y:40; --z:10;" data-delay="700">"Dogs bark"</div>
+                            <div class="sentence-point" style="--x:-20; --y:50; --z:30;" data-delay="900">"Birds fly"</div>
+                            <div class="sentence-point" style="--x:20; --y:-30; --z:-40;" data-delay="1100">"Kings rule"</div>
+                            <div class="sentence-point" style="--x:-40; --y:-20; --z:50;" data-delay="1300">"Science experiments"</div>
                         </div>
-                        <div class="intuition-text" data-delay="2000">
+                        <div class="intuition-text" data-delay="1800">
                             <h3>Intuition:</h3>
-                            <p>Questions about pets will lie near "cat" and "dog" clusters</p>
+                            <p>Sentences with similar meaning appear close together in this 3D space</p>
                         </div>
                     </div>
                 </div>
@@ -343,6 +327,7 @@
                                 <span>Medium</span>
                                 <span>Large</span>
                             </div>
+                            <div id="chunkMessage" class="chunk-message">Medium chunks</div>
                         </div>
                         <div class="chunk-visualization">
                             <div class="document">
@@ -379,6 +364,7 @@
             <div class="slide" data-slide="10">
                 <div class="slide-content">
                     <h1>Recap — How Semantic Search Works</h1>
+                    <h2 class="subheading">Key Steps</h2>
                     <div class="recap-flow">
                         <div class="flow-step" data-delay="500">
                             <div class="step-icon">🗄️</div>
@@ -411,6 +397,7 @@
                                 <span>A similarity-based retrieval process using vector distance</span>
                             </div>
                         </div>
+                        <p class="recap-note" data-delay="4400">This pipeline runs each time you ask a question.</p>
                     </div>
                 </div>
             </div>
@@ -628,18 +615,27 @@
                     <div class="final-thoughts">
                         <div class="key-message" data-delay="500">
                             <h2>🎯 Key Takeaways</h2>
-                            <div class="bullet-points">
-                                <div class="bullet-item" data-delay="1000">
-                                    <span class="bullet">•</span>
-                                    <span><strong>Why traditional LLMs need RAG</strong> for private/custom knowledge</span>
+                            <div class="bullet-points grouped">
+                                <div class="bullet-group" data-delay="1000">
+                                    <h3 class="rag-section-title">Retrieval</h3>
+                                    <div class="bullet-item">
+                                        <span class="bullet">•</span>
+                                        <span>Find the most relevant chunks using vector search</span>
+                                    </div>
                                 </div>
-                                <div class="bullet-item" data-delay="1300">
-                                    <span class="bullet">•</span>
-                                    <span><strong>Embeddings power semantic search</strong> by capturing meaning</span>
+                                <div class="bullet-group" data-delay="1400">
+                                    <h3 class="rag-section-title">Augmentation</h3>
+                                    <div class="bullet-item">
+                                        <span class="bullet">•</span>
+                                        <span>Add those chunks to your prompt as context</span>
+                                    </div>
                                 </div>
-                                <div class="bullet-item" data-delay="1600">
-                                    <span class="bullet">•</span>
-                                    <span><strong>Vector DB + Chunking + Re-ranking</strong> make it scalable</span>
+                                <div class="bullet-group" data-delay="1800">
+                                    <h3 class="rag-section-title">Generation</h3>
+                                    <div class="bullet-item">
+                                        <span class="bullet">•</span>
+                                        <span>The LLM produces the final answer</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
