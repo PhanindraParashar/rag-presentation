@@ -1443,28 +1443,27 @@ h3 {
   animation: drawLine 0.5s ease-out forwards;
 }
 
-.line1 {
+.line1,
+.line2,
+.line3 {
   top: 50%;
-  left: 50%;
-  width: 150px;
-  transform: rotate(30deg);
+  left: 20%;
   transform-origin: left center;
+}
+
+.line1 {
+  width: 300px;
+  transform: rotate(-25deg);
 }
 
 .line2 {
-  top: 50%;
-  left: 50%;
-  width: 120px;
-  transform: rotate(-20deg);
-  transform-origin: left center;
+  width: 320px;
+  transform: rotate(10deg);
 }
 
 .line3 {
-  top: 50%;
-  left: 50%;
-  width: 100px;
-  transform: rotate(60deg);
-  transform-origin: left center;
+  width: 280px;
+  transform: rotate(40deg);
 }
 
 @keyframes drawLine {
@@ -1500,17 +1499,17 @@ h3 {
 
 .doc1 {
   top: 20%;
-  right: 30%;
+  left: 70%;
 }
 
 .doc2 {
   bottom: 30%;
-  right: 20%;
+  left: 75%;
 }
 
 .doc3 {
   bottom: 20%;
-  left: 60%;
+  left: 55%;
 }
 
 @keyframes docAppear {
@@ -1642,6 +1641,90 @@ h3 {
   color: var(--color-text-secondary);
 }
 
+.chunk-message {
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  text-align: center;
+}
+
+.subheading {
+  font-size: var(--font-size-xl);
+  color: var(--color-primary);
+  margin-top: var(--space-16);
+  text-align: center;
+}
+
+.recap-note {
+  margin-top: var(--space-16);
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.bullet-group {
+  margin-bottom: var(--space-16);
+}
+
+.rag-section-title {
+  color: var(--color-primary);
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--space-8);
+}
+
+/* 3D Vector Space */
+.vector-3d {
+  position: relative;
+  width: 350px;
+  height: 350px;
+  margin: 0 auto;
+  transform-style: preserve-3d;
+  perspective: 600px;
+}
+
+.axis {
+  position: absolute;
+  background: var(--color-border);
+}
+
+.x-axis {
+  height: 2px;
+  width: 250px;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.y-axis {
+  width: 2px;
+  height: 250px;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.z-axis {
+  height: 2px;
+  width: 250px;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%) rotateY(90deg);
+  transform-origin: left top;
+}
+
+.sentence-point {
+  position: absolute;
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+  padding: var(--space-4) var(--space-8);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  transform-style: preserve-3d;
+  opacity: 0;
+  animation: docAppear 0.3s ease-out forwards;
+  left: calc(50% + var(--x)px);
+  bottom: calc(40px + var(--y)px);
+  transform: translateZ(var(--z)px);
+}
+
 .chunk-visualization {
   display: flex;
   justify-content: center;
@@ -1742,7 +1825,8 @@ h3 {
   flex-direction: column;
   align-items: center;
   gap: var(--space-24);
-  margin: var(--space-32) 0;
+  margin: var(--space-32) auto;
+  max-width: 600px;
 }
 
 .hyde-step {
@@ -1750,6 +1834,7 @@ h3 {
   padding: var(--space-24);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
+  width: 100%;
   max-width: 500px;
   text-align: center;
   opacity: 0;

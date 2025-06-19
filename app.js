@@ -314,6 +314,7 @@ class PresentationController {
 
     initializeChunkingSlider() {
         const slider = document.getElementById('chunkSlider');
+        const message = document.getElementById('chunkMessage');
         if (!slider) return;
 
         slider.addEventListener('input', (e) => {
@@ -328,6 +329,11 @@ class PresentationController {
             targetChunks.forEach(chunk => {
                 chunk.style.display = 'inline-block';
             });
+
+            if (message) {
+                const labels = {1: 'Small chunks', 2: 'Medium chunks', 3: 'Large chunks'};
+                message.textContent = labels[value] || '';
+            }
         });
 
         // Initialize with medium chunks
