@@ -319,6 +319,12 @@ class PresentationController {
         slider.addEventListener('input', (e) => {
             const value = e.target.value;
             const chunks = document.querySelectorAll('.chunk');
+
+            const feedback = document.getElementById('chunkFeedback');
+            if (feedback) {
+                const labels = ['Small', 'Medium', 'Large'];
+                feedback.textContent = labels[value - 1];
+            }
             
             chunks.forEach(chunk => {
                 chunk.style.display = 'none';

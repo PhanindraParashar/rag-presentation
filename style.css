@@ -1297,6 +1297,30 @@ h3 {
   overflow: hidden;
 }
 
+.vector-plot {
+  width: 100%;
+  height: 100%;
+}
+
+.axis {
+  stroke: var(--color-border);
+  stroke-width: 2;
+}
+
+.vector-line {
+  stroke: var(--color-primary);
+  stroke-width: 2;
+}
+
+.vector-point {
+  fill: var(--color-primary);
+}
+
+.vector-label {
+  font-size: var(--font-size-sm);
+  fill: var(--color-text);
+}
+
 .cluster {
   position: absolute;
   display: flex;
@@ -1446,24 +1470,24 @@ h3 {
 .line1 {
   top: 50%;
   left: 50%;
-  width: 150px;
-  transform: rotate(30deg);
+  width: 170px;
+  transform: rotate(-30deg);
   transform-origin: left center;
 }
 
 .line2 {
   top: 50%;
   left: 50%;
-  width: 120px;
-  transform: rotate(-20deg);
+  width: 160px;
+  transform: rotate(20deg);
   transform-origin: left center;
 }
 
 .line3 {
   top: 50%;
   left: 50%;
-  width: 100px;
-  transform: rotate(60deg);
+  width: 130px;
+  transform: rotate(35deg);
   transform-origin: left center;
 }
 
@@ -1642,6 +1666,13 @@ h3 {
   color: var(--color-text-secondary);
 }
 
+.chunk-feedback {
+  margin-top: var(--space-12);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+}
+
 .chunk-visualization {
   display: flex;
   justify-content: center;
@@ -1742,7 +1773,9 @@ h3 {
   flex-direction: column;
   align-items: center;
   gap: var(--space-24);
-  margin: var(--space-32) 0;
+  margin: var(--space-32) auto;
+  max-height: 60vh;
+  overflow-y: auto;
 }
 
 .hyde-step {
@@ -2127,6 +2160,28 @@ h3 {
 
 .rag-word.generate {
   animation-delay: 1s;
+}
+
+.rag-steps {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-32);
+  margin-top: var(--space-24);
+}
+
+.rag-group {
+  text-align: center;
+}
+
+.rag-group h4 {
+  margin-bottom: var(--space-8);
+  color: var(--color-primary);
+  font-size: var(--font-size-md);
+}
+
+.rag-step {
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-4);
 }
 
 @keyframes wordPulse {

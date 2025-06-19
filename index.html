@@ -211,35 +211,28 @@
                 <div class="slide-content">
                     <h1>Visualizing Embedding Space</h1>
                     <div class="embedding-space">
-                        <div class="space-container">
-                            <div class="cluster animals-cluster" data-delay="500">
-                                <div class="cluster-title">Animals</div>
-                                <div class="cluster-items">
-                                    <div class="concept-dot" data-hover="dog">🐕 dog</div>
-                                    <div class="concept-dot" data-hover="cat">🐱 cat</div>
-                                    <div class="concept-dot" data-hover="bird">🐦 bird</div>
-                                </div>
-                            </div>
-                            <div class="cluster royalty-cluster" data-delay="1000">
-                                <div class="cluster-title">Royalty</div>
-                                <div class="cluster-items">
-                                    <div class="concept-dot" data-hover="king">👑 king</div>
-                                    <div class="concept-dot" data-hover="queen">👸 queen</div>
-                                    <div class="concept-dot" data-hover="crown">👑 crown</div>
-                                </div>
-                            </div>
-                            <div class="cluster science-cluster" data-delay="1500">
-                                <div class="cluster-title">Science</div>
-                                <div class="cluster-items">
-                                    <div class="concept-dot" data-hover="experiment">🧪 experiment</div>
-                                    <div class="concept-dot" data-hover="research">🔬 research</div>
-                                    <div class="concept-dot" data-hover="data">📊 data</div>
-                                </div>
-                            </div>
+                        <div class="space-container vector-demo">
+                            <svg class="vector-plot" viewBox="0 0 400 350">
+                                <line x1="200" y1="250" x2="350" y2="250" class="axis x-axis" />
+                                <line x1="200" y1="250" x2="200" y2="70" class="axis y-axis" />
+                                <line x1="200" y1="250" x2="80" y2="320" class="axis z-axis" />
+
+                                <line x1="200" y1="250" x2="280" y2="170" class="vector-line" />
+                                <circle cx="280" cy="170" r="4" class="vector-point" />
+                                <text x="290" y="170" class="vector-label">"Cats chase mice" [0.3,0.7,0.2]</text>
+
+                                <line x1="200" y1="250" x2="260" y2="280" class="vector-line" />
+                                <circle cx="260" cy="280" r="4" class="vector-point" />
+                                <text x="270" y="282" class="vector-label">"The king wears a crown" [0.5,0.4,-0.1]</text>
+
+                                <line x1="200" y1="250" x2="140" y2="200" class="vector-line" />
+                                <circle cx="140" cy="200" r="4" class="vector-point" />
+                                <text x="150" y="200" class="vector-label">"Research uses data" [0.1,0.6,0.8]</text>
+                            </svg>
                         </div>
                         <div class="intuition-text" data-delay="2000">
                             <h3>Intuition:</h3>
-                            <p>Questions about pets will lie near "cat" and "dog" clusters</p>
+                            <p>Each sentence becomes a vector in 3‑D space.</p>
                         </div>
                     </div>
                 </div>
@@ -343,6 +336,7 @@
                                 <span>Medium</span>
                                 <span>Large</span>
                             </div>
+                            <div id="chunkFeedback" class="chunk-feedback">Medium</div>
                         </div>
                         <div class="chunk-visualization">
                             <div class="document">
@@ -382,16 +376,19 @@
                     <div class="recap-flow">
                         <div class="flow-step" data-delay="500">
                             <div class="step-icon">🗄️</div>
+                            <div class="step-title">1. Docs → Vectors</div>
                             <div class="step-text">Document store with precomputed embeddings</div>
                         </div>
                         <div class="flow-arrow" data-delay="1000">↓</div>
                         <div class="flow-step" data-delay="1500">
                             <div class="step-icon">❓</div>
+                            <div class="step-title">2. Embed Query</div>
                             <div class="step-text">Query converted to an embedding</div>
                         </div>
                         <div class="flow-arrow" data-delay="2000">↓</div>
                         <div class="flow-step" data-delay="2500">
                             <div class="step-icon">🔍</div>
+                            <div class="step-title">3. Retrieve Nearest</div>
                             <div class="step-text">Similarity-based retrieval using vector distance (cosine similarity)</div>
                         </div>
                     </div>
@@ -650,6 +647,21 @@
                                 <div class="rag-word augment">AUGMENT</div>
                                 <div class="rag-arrow">→</div>
                                 <div class="rag-word generate">GENERATE</div>
+                            </div>
+                            <div class="rag-steps">
+                                <div class="rag-group">
+                                    <h4>Retrieval</h4>
+                                    <div class="rag-step">Embed query</div>
+                                    <div class="rag-step">Search database</div>
+                                </div>
+                                <div class="rag-group">
+                                    <h4>Augmentation</h4>
+                                    <div class="rag-step">Attach top documents</div>
+                                </div>
+                                <div class="rag-group">
+                                    <h4>Generation</h4>
+                                    <div class="rag-step">LLM crafts final answer</div>
+                                </div>
                             </div>
                         </div>
                         <div class="questions-section" data-delay="3000">
